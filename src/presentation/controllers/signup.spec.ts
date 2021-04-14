@@ -89,7 +89,7 @@ describe('SignUp Controller', () => {
     jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false) // Altera o valor padrão do mock
     const httpRequest = {
       body: {
-        email: 'any@mail.com',
+        email: 'invalid_any@mail.com',
         name: 'any_name',
         password: 'any123',
         passwordConfirmation: 'any123'
@@ -99,5 +99,20 @@ describe('SignUp Controller', () => {
     const httpResponse = sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamsError('email'))
+  })
+
+  test('Should call EmailValidator with correct email', () => {
+    const { sut, emailValidatorStub } = makeSut()
+    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any@mail.com',
+        password: 'any123',
+        passwordConfirmation: 'any123'
+      }
+    }
+    sut.handle(httpRequest)
+    expect(isValidSpy).toHaveBeenCalledWith('any@mail.com')
   })
 })
