@@ -1,7 +1,6 @@
 import { InvalidParamsError } from '../error/invalidParamsError'
 import { MissingParamsError } from '../error/missingParamsError'
-import { ServerError } from '../error/serverError'
-import { BadRequest } from '../helpers/http-helper'
+import { BadRequest, serverError } from '../helpers/http-helper'
 import { Controller } from '../protocols/controller'
 import { httpRequest, httpResponse } from '../protocols/http'
 
@@ -33,10 +32,7 @@ export class SignUpController implements Controller {
         statusCode: 200
       }
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: new ServerError()
-      }
+      return serverError()
     }
   }
 }
