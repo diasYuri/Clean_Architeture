@@ -12,12 +12,6 @@
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "npm run test:ci"
-    }
-  },
   " lint-staged ": {
     "*.ts": [
       "eslint 'src/**' --fix",
@@ -53,5 +47,8 @@
     "bcrypt": "^5.0.1",
     "mongodb": "^3.6.6",
     "validator": "^13.5.2"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix"
   }
 }
