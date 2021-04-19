@@ -5,9 +5,9 @@ import { EmailValidatorAdapter } from '../../utils/email-validator-adapter'
 import { AccountMongoRepository } from '../../infra/db/mongodb/account-repository/accout'
 
 export const makeSignupController = (): SignUpController => {
-  const addAccountRepository = new AccountMongoRepository()
+  const accountMongoRepository = new AccountMongoRepository()
   const encrypterAdapter = new BcryptAdapter(12)
+  const dbAddAccount = new DbAddAccount(encrypterAdapter, accountMongoRepository)
   const emailValidator = new EmailValidatorAdapter()
-  const dbAddAccount = new DbAddAccount(encrypterAdapter, addAccountRepository)
   return new SignUpController(emailValidator, dbAddAccount)
 }
