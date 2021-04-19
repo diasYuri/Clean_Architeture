@@ -21,7 +21,8 @@ describe('SignUp Routes', () => {
       .send({
         name: 'any_name',
         email: 'any@mail.com',
-        password: 'any123'
+        password: 'any123',
+        passwordConfirmation: 'any123'
       })
       .expect(200)
   })
