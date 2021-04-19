@@ -1,7 +1,5 @@
-import express from 'express'
+import app from './config/app'
 
-const server = express()
-
-server.listen(3000, () => {
+app.listen(3000, () => {
   console.log('SERVER START PORT 3000')
 })
