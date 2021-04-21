@@ -14,7 +14,6 @@ describe('Mongo Helper', () => {
     expect(accountColletion).toBeTruthy()
     await sut.disconnect()
     accountColletion = await sut.getCollection('accounts')
-    console.log(accountColletion)
     expect(accountColletion).toBeTruthy()
   })
 })

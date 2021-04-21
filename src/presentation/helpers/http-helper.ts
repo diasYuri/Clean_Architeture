@@ -8,10 +8,10 @@ export const BadRequest = (error: Error): httpResponse => {
   }
 }
 
-export const serverError = (): httpResponse => {
+export const serverError = (error: Error): httpResponse => {
   return {
     statusCode: 500,
-    body: new ServerError()
+    body: new ServerError(error.stack)
   }
 }
 
