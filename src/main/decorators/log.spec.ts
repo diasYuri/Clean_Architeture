@@ -1,6 +1,6 @@
 import { LogErrorRepository } from '../../data/protocols/log-error-repository'
 import { serverError } from '../../presentation/helpers/http-helper'
-import { Controller, httpRequest, httpResponse } from '../../presentation/protocols'
+import { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols'
 import { LogControlllerDecorator } from './log'
 
 interface SutTypes {
@@ -11,8 +11,8 @@ interface SutTypes {
 
 const makeController = (): Controller => {
   class ControllerStub implements Controller {
-    async handle (httpRequest: httpRequest): Promise<httpResponse> {
-      const httpResponse: httpResponse = {
+    async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+      const httpResponse: HttpResponse = {
         statusCode: 200,
         body: {
           name: 'Any_name'
@@ -51,7 +51,7 @@ describe('LogController Decorator', () => {
   test('should call controller handle', async () => {
     const { sut, controllerStub } = makeSut()
     const handleSpy = jest.spyOn(controllerStub, 'handle')
-    const httpRequest: httpRequest = {
+    const httpRequest: HttpRequest = {
       body: {
         email: 'any@mail.com',
         name: 'any_name',
@@ -66,7 +66,7 @@ describe('LogController Decorator', () => {
   test('should returns the same result of the controller', async () => {
     const { sut } = makeSut()
 
-    const httpRequest: httpRequest = {
+    const httpRequest: HttpRequest = {
       body: {
         email: 'any@mail.com',
         name: 'any_name',
@@ -90,7 +90,7 @@ describe('LogController Decorator', () => {
     const error = serverError(fakeError)
     const logSpy = jest.spyOn(logErrorRepositoryStub, 'log')
     jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(new Promise(resolve => resolve(error)))
-    const httpRequest: httpRequest = {
+    const httpRequest: HttpRequest = {
       body: {
         email: 'any@mail.com',
         name: 'any_name',
