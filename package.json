@@ -13,12 +13,6 @@
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage"
   },
-  " lint-staged ": {
-    "*.ts": [
-      "eslint 'src/**' --fix",
-      "npm run test:staged"
-    ]
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
