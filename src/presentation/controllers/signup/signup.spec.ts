@@ -1,6 +1,7 @@
 import { EmailValidator, AddAccount, AddAccountModel, AccountModel, Validation } from './signup-protocols'
 import { InvalidParamsError, MissingParamsError, ServerError } from '../../error'
 import { SignUpController } from './signup'
+import { BadRequest } from '../../helpers/http-helper'
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
@@ -81,6 +82,7 @@ describe('SignUp Controller', () => {
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamsError('name'))
   })
+
   test('Should return 400 if no email is provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
@@ -95,6 +97,7 @@ describe('SignUp Controller', () => {
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamsError('email'))
   })
+
   test('Should return 400 if no password is provided', async () => {
     const { sut } = makeSut()
 
@@ -110,6 +113,7 @@ describe('SignUp Controller', () => {
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamsError('password'))
   })
+
   test('Should return 400 if no password confirmation is provided', async () => {
     const { sut } = makeSut()
 
@@ -263,5 +267,15 @@ describe('SignUp Controller', () => {
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
     expect(validatorSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  test('Should return 200 if valid data is provider', async () => {
+    const { sut, validationStub } = makeSut()
+
+    const httpRequest = makeFakeRequest()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamsError('any_field'))
+    const response = await sut.handle(httpRequest)
+
+    expect(response).toEqual(BadRequest(new MissingParamsError('any_field')))
   })
 })
