@@ -8,7 +8,9 @@ export class LoginController implements Controller {
       return await new Promise(resolve => resolve(BadRequest(new MissingParamsError('email'))))
     }
     if (!httpRequest.body.password) {
-      return await new Promise(resolve => resolve(BadRequest(new MissingParamsError('password'))))
+      return new Promise(resolve => resolve(BadRequest(new MissingParamsError('password'))))
     }
+
+    return new Promise(resolve => resolve(null))
   }
 }

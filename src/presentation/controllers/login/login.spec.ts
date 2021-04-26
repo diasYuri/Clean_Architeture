@@ -15,4 +15,16 @@ describe('Login controller test', () => {
     const response = await sut.handle(httpRequest)
     expect(response).toEqual(BadRequest(new MissingParamsError('email')))
   })
+
+  test('should return bad request if no password is provider', async () => {
+    const sut = new LoginController()
+    const httpRequest: HttpRequest = {
+      body: {
+        email: 'any@gmail.com'
+      }
+    }
+
+    const response = await sut.handle(httpRequest)
+    expect(response).toEqual(BadRequest(new MissingParamsError('password')))
+  })
 })
