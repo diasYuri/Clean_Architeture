@@ -1,5 +1,5 @@
 import { EmailValidator, AddAccount, AddAccountModel, AccountModel, Validation } from './signup-protocols'
-import { InvalidParamsError, MissingParamsError, ServerError } from '../../error'
+import { MissingParamsError, ServerError } from '../../error'
 import { SignUpController } from './signup'
 import { BadRequest } from '../../helpers/http-helper'
 
@@ -68,23 +68,6 @@ const makeFakeRequest = () => ({
 })
 
 describe('SignUp Controller', () => {
-  test('Should return 400 if password confirmation is failed', async () => {
-    const { sut } = makeSut()
-
-    const httpRequest = {
-      body: {
-        email: 'any@mail.com',
-        name: 'any_name',
-        password: 'any123',
-        passwordConfirmation: 'invalid'
-      }
-    }
-
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamsError('passwordConfirmation'))
-  })
-
   test('Should call EmailValidator with correct email', async () => {
     const { sut, emailValidatorStub } = makeSut()
     const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
