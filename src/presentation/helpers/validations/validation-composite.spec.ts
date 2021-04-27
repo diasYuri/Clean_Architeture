@@ -10,7 +10,7 @@ interface SutTypes{
 const makeValidationStub = (): Validation => {
   class ValidationStub implements Validation {
     validate (input: any): Error {
-      return new MissingParamsError('field')
+      return null
     }
   }
   return new ValidationStub()
@@ -40,5 +40,11 @@ describe('Validation Composite', () => {
     jest.spyOn(validationStubs[1], 'validate').mockReturnValueOnce(new MissingParamsError('field'))
     const error = sut.validate({ field: 'any' })
     expect(error).toEqual(new Error())
+  })
+
+  test('should return null if validations suceeds', () => {
+    const { sut } = makeSut()
+    const error = sut.validate({ field: 'any' })
+    expect(error).toBeFalsy()
   })
 })
