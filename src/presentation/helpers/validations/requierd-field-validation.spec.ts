@@ -1,16 +1,22 @@
-import { MissingParamsError } from '../../error'
-import { RequiredFieldValidation } from './required-field-validation'
+import { InvalidParamsError } from '../../error'
+import { CompareFieldsValidation } from './compare-fields-validation'
 
 describe('Required Fields Validation', () => {
   test('should return a MissingParamsError if RequiredFieldValidation fails', () => {
-    const sut = new RequiredFieldValidation('field')
-    const error = sut.validate({ any_field: 'any_any' })
-    expect(error).toEqual(new MissingParamsError('field'))
+    const sut = new CompareFieldsValidation('field', 'fieldToCompare')
+    const error = sut.validate({
+      field: 'any_value',
+      fieldToCompare: 'another_value'
+    })
+    expect(error).toEqual(new InvalidParamsError('fieldToCompare'))
   })
 
   test('should return null if RequiredFieldValidation sucess', () => {
-    const sut = new RequiredFieldValidation('field')
-    const error = sut.validate({ field: 'any_any' })
+    const sut = new CompareFieldsValidation('field', 'fieldToCompare')
+    const error = sut.validate({
+      field: 'any_value',
+      fieldToCompare: 'any_value'
+    })
     expect(error).toBeFalsy()
   })
 })
