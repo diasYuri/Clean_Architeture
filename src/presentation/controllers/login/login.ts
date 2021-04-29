@@ -1,6 +1,5 @@
 import { Authentication } from '../../../domain/useCases/authentication'
-import { InvalidParamsError, MissingParamsError } from '../../error'
-import { BadRequest, serverError, sucess, unauthorized } from '../../helpers/http-helper'
+import { BadRequest, serverError, sucess, unauthorized } from '../../helpers/http/http-helper'
 import { Validation } from '../../helpers/validations/validation'
 import { Controller, HttpRequest, HttpResponse } from '../../protocols'
 
