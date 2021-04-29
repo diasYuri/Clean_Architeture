@@ -1,3 +1,4 @@
+import { HashComparer } from '../../protocols/criptography/hash-compare'
 import { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
 import { AccountModel } from '../add-account/data-add-account-protocols'
 import { DbAuthentication } from './db-authentication'
@@ -6,7 +7,7 @@ const makeFakeAccount = (): AccountModel => ({
   id: 'any',
   name: 'any_name',
   email: 'any@mail.com',
-  password: 'any_password'
+  password: 'hashed_password'
 })
 
 const makeFakeRequest = () => ({
@@ -24,18 +25,30 @@ const makeLoadStub = () => {
   return new LoadAccountByEmailRepositoryStub()
 }
 
+const makeHashCompareStub = (): HashComparer => {
+  class HashComparerStub implements HashComparer {
+    async compare (value: string, hash: string): Promise<Boolean> {
+      return await new Promise(resolve => resolve(true))
+    }
+  }
+  return new HashComparerStub()
+}
+
 interface SutTypes{
-  loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   sut: DbAuthentication
+  loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
+  hashComparerStub: HashComparer
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositoryStub = makeLoadStub()
-  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub)
+  const hashComparerStub = makeHashCompareStub()
+  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub)
 
   return {
+    sut,
     loadAccountByEmailRepositoryStub,
-    sut
+    hashComparerStub
   }
 }
 
@@ -59,5 +72,12 @@ describe('DbAuthentication UseCase', () => {
     jest.spyOn(loadAccountByEmailRepositoryStub, 'load').mockReturnValueOnce(null)
     const acessToken = await sut.auth(makeFakeRequest())
     expect(acessToken).toBeNull()
+  })
+
+  test('should call HashComparer with correct values', async () => {
+    const { sut, hashComparerStub } = makeSut()
+    const CompareSpy = jest.spyOn(hashComparerStub, 'compare')
+    await sut.auth(makeFakeRequest())
+    expect(CompareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
   })
 })
