@@ -1,8 +1,5 @@
-import { Authentication } from '../../../domain/useCases/authentication'
-import { InvalidParamsError, MissingParamsError } from '../../error'
-import { BadRequest, serverError, sucess, unauthorized } from '../../helpers/http-helper'
-import { Validation } from '../../helpers/validations/validation'
-import { Controller, HttpRequest, HttpResponse } from '../../protocols'
+import { Controller, HttpRequest, HttpResponse, Authentication, Validation } from './login-protocols'
+import { BadRequest, serverError, sucess, unauthorized } from '../../helpers/http/http-helper'
 
 export class LoginController implements Controller {
   private readonly validation: Validation
@@ -20,7 +17,7 @@ export class LoginController implements Controller {
         return BadRequest(error)
       }
 
-      const acessToken = await this.authentication.auth(email, password)
+      const acessToken = await this.authentication.auth({ email, password })
       if (!acessToken) {
         return unauthorized()
       }
